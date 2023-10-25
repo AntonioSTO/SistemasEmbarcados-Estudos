@@ -24,7 +24,7 @@ segment code
 ;desenha circulos 
     xor si, si
     xor di, di
-    mov cx, 50000
+    mov cx, 0800h
     mov si, 319
     mov di, 240
 
@@ -55,23 +55,21 @@ volta:
     pop ax
     pop ax
     
-    
-
-
     add si, word[vx]
     add di, word[vy]
+    
+    cmp     si, 627
+    jge      colisao_direita        
 
-    cmp     si, 629
-    jz      colisao_direita        
+    cmp     di, 12
+    jl      colisao_cima
 
-    cmp     di, 10
-    jz      colisao_cima
-
-    cmp     si, 9
-    jz      colisao_esquerda
+    cmp     si, 10
+    jl      colisao_esquerda
 
     cmp     di, 470
     jge     colisao_baixo
+
 
 loop volta
 
@@ -694,4 +692,3 @@ vy      dw      10
 segment stack stack
             resb        512
 stacktop:
-
