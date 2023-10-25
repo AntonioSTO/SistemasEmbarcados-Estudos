@@ -59,15 +59,37 @@ volta:
 
 
     add si, word[vx]
-    add di, 0
-    cmp     si, 639
-    je      revertex        
+    add di, word[vy]
+
+    cmp     si, 629
+    jz      colisao_direita        
+
+    cmp     di, 10
+    jz      colisao_cima
+
+    cmp     si, 9
+    jz      colisao_esquerda
+
+    cmp     di, 470
+    jge     colisao_baixo
 
 loop volta
 
-revertex:
-    mov word[vx], -5    
+colisao_direita:
+    mov word[vx], -10    
     jmp volta   
+
+colisao_cima:
+    mov word[vy], 10
+    jmp volta
+
+colisao_esquerda:
+    mov word[vx], 10    
+    jmp volta  
+
+colisao_baixo:
+    mov word[vy], -10    
+    jmp volta    
 
 l4:
     call    cursor
@@ -666,8 +688,8 @@ deltay      dw      0
 mens        db          'Funcao Grafica'
 
 velocidade  dw  200
-vx      dw      5
-vy      dw      5
+vx      dw      10
+vy      dw      10
 ;*************************************************************************
 segment stack stack
             resb        512
