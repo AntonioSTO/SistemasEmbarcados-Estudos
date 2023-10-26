@@ -19,7 +19,6 @@ segment code
     mov         al,12h
     mov         ah,0
     int         10h
-            
         
 ;desenha circulos 
     xor si, si
@@ -27,6 +26,67 @@ segment code
     mov cx, 0800h
     mov si, 319
     mov di, 240
+
+;desenhar retas
+
+        call    desenha_layout
+
+desenha_layout:
+    mov     byte[cor],branco_intenso    ;baixo
+    mov     ax,0
+    push        ax
+    mov     ax,0
+    push        ax
+    mov     ax,639
+    push        ax
+    mov     ax,0
+    push        ax
+    call        line
+
+
+    mov     byte[cor],branco_intenso    ;esquerda
+    mov     ax,0
+    push        ax
+    mov     ax,0
+    push        ax
+    mov     ax,0
+    push        ax
+    mov     ax,479
+    push        ax
+    call        line
+
+    mov     byte[cor],branco_intenso    ;cima
+    mov     ax,0
+    push        ax
+    mov     ax,479
+    push        ax
+    mov     ax,639
+    push        ax
+    mov     ax,479
+    push        ax
+    call        line
+
+    mov     byte[cor],branco_intenso    ;direita
+    mov     ax,639
+    push        ax
+    mov     ax,0
+    push        ax
+    mov     ax,639
+    push        ax
+    mov     ax,479
+    push        ax
+    call        line
+
+    mov     byte[cor],branco_intenso    ;cabecalho
+    mov     ax,0
+    push        ax
+    mov     ax,430
+    push        ax
+    mov     ax, 640
+    push        ax
+    mov     ax,430
+    push        ax
+    call        line      
 
 volta:
 
@@ -58,17 +118,17 @@ volta:
     add si, word[vx]
     add di, word[vy]
     
-    cmp     si, 627
+    cmp     si, 625
     jge      colisao_direita        
 
-    cmp     di, 12
-    jl      colisao_cima
+    cmp     di, 15
+    jl      colisao_baixo
 
-    cmp     si, 10
+    cmp     si, 15
     jl      colisao_esquerda
 
-    cmp     di, 470
-    jge     colisao_baixo
+    cmp     di, 415
+    jge     colisao_cima
 
 
 loop volta
@@ -78,7 +138,19 @@ colisao_direita:
     jmp volta   
 
 colisao_cima:
-    mov word[vy], 10
+    ;push ax
+    ;push bx
+    ;mov ax,vy
+    ;mov bx,vy
+
+    ;sub ax,bx
+    ;sub ax,bx
+
+    ;mov word[vy],ax
+
+    ;pop bx
+    ;pop ax
+    mov word[vy], -10
     jmp volta
 
 colisao_esquerda:
@@ -86,7 +158,7 @@ colisao_esquerda:
     jmp volta  
 
 colisao_baixo:
-    mov word[vy], -10    
+    mov word[vy], 10    
     jmp volta    
 
 l4:
@@ -97,7 +169,7 @@ l4:
     inc     dl                  ;avanca a coluna
     inc     byte [cor]          ;mudar a cor para a seguinte
     loop    l4
-
+    
     mov     ah,08h
     int     21h
     mov     ah,0                    ; set video mode
@@ -105,6 +177,7 @@ l4:
     int     10h
     mov     ax,4c00h
     int     21h
+
 ;***************************************************************************
 ;
 ;   fun��o cursor
@@ -685,9 +758,10 @@ deltax      dw      0
 deltay      dw      0   
 mens        db          'Funcao Grafica'
 
-velocidade  dw  200
+velocidade  dw  50
 vx      dw      10
 vy      dw      10
+
 ;*************************************************************************
 segment stack stack
             resb        512
